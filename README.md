@@ -13,9 +13,9 @@ flag, never from a divergent code path.
 
 | | baseline | enhanced | |
 |---|---|---|---|
-| Recall@5 | 0.57 | **0.91** | +60% |
-| nDCG | 0.47 | **0.89** | +89% |
-| Correctness | 0.59 | 0.69 | +17% |
+| Recall@5 | 0.57 | **0.91** | +34% |
+| nDCG | 0.47 | **0.89** | +42% |
+| Correctness | 0.59 | 0.69 | +10% |
 
 The enhancement gap **widens** with corpus size: on a 50-page corpus the same pipeline
 scored 0.69 → 0.87 (+26%). Baseline retrieval degrades as the corpus grows while the
