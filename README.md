@@ -109,12 +109,8 @@ python -m scripts.ablate              --config configs/scale500.yaml --series cl
 it, which matters because the answer model sits against a 30,000 tokens/minute rate limit
 for the duration of a full run.
 
-Review the results interactively:
-
-```bash
-python -m scripts.build_review_queue --config configs/scale500.yaml --step +rerank
-streamlit run scripts/review_app.py -- --config configs/scale500.yaml
-```
+To review the results interactively afterwards, see
+[Human-in-the-loop review](#human-in-the-loop-review).
 
 ## Configs
 
@@ -169,6 +165,69 @@ the vision model to author its own answer key would make any result circular.
 correctness by rubric judge; faithfulness as the grounded-sentence fraction; and decision
 accuracy for the abstain/answer choice. Everything is broken out per category and per
 predicate, with low-sample groups flagged rather than quietly averaged in.
+
+## Human-in-the-loop review
+
+A system that answers questions from scientific documents should not be trusted
+unsupervised, so the oversight surface is part of the deliverable rather than an
+afterthought. `scripts/review_app.py` is a Streamlit **review queue over the locked
+results**: every answer the evaluation produced, sorted **worst-first**, so a reviewer
+with limited time spends it where the system is least sure instead of reading from
+`q001`.
+
+```bash
+python -m scripts.build_review_queue --config configs/scale500.yaml --step +rerank
+streamlit run scripts/review_app.py -- --config configs/scale500.yaml
+```
+
+The queue is precomputed because scoring it needs a retrieval pass per question; the app
+itself only reads. `--step` takes any column of the ablation series, so the same interface
+reviews the baseline or any intermediate config under one definition of confidence.
+
+**Confidence is `0.5·Rn + 0.5·G`** — normalised retrieval strength (the top query-context
+cosine, the same value the abstention gate thresholds) and grounding (the fraction of
+answer sentences supported by the chunk they cite). Both are **label-free**, and that is
+the point. The obvious shortcut is to reuse the retrieval metrics already sitting in the
+per-question logs, but recall@k and nDCG are computed against gold supporting chunks, so a
+score built from them would rank items by how *right* they are — information a deployed
+queue cannot have, and which would make the dashboard look far better than it is. The
+weights are a flat 0.5/0.5 by choice; fitting them against the locked correctness column
+would quietly turn the score back into the correctness proxy the definition exists to
+avoid.
+
+**Abstentions invert the priority.** There is no answer to grade, so they are ranked by
+retrieval strength alone: abstaining on weak retrieval is usually correct and wastes a
+reviewer's time, while abstaining on *strong* retrieval is the false-abstention failure
+mode and is the most valuable thing a human can look at.
+
+**Each card carries the evidence, not just the verdict** — the answer, the three signals
+with the raw cosine, provenance counts showing how the context was reached, every cited
+chunk with its source text pulled live from the store (flagged red if a cited id is not in
+the store), the VQA gate's per-crop pass/block decisions, and the chain-of-thought trace
+where one exists. **The gold answer and the automated judge's verdict are hidden behind a
+toggle, off by default**, so the first judgement comes from the evidence rather than from
+the expected string — revealing then audits both the reviewer and the judge.
+
+**Verdicts close the loop.** Correct / incorrect / needs-review plus a free-text note
+append to a log that records the confidence and abstention state *at review time*. That
+last part is what makes the log useful later: it is the raw material for asking whether the
+confidence score actually predicts human disagreement, which cannot be answered until
+enough verdicts exist. The log is append-only, so a reviewer changing their mind adds a
+line rather than overwriting one and the history survives.
+
+The dashboard is **strictly read-only** over the locked results — it writes only the queue
+sidecar and the feedback log, and no published metric can move because someone opened it.
+
+As a check on whether the ranking means anything: ranking blind, with no access to gold,
+the queue put three `figure` questions at the top of its worst-first order — and the
+gold-backed metric independently reports figure decision-accuracy at 0.75, i.e. a quarter
+of answerable figure questions wrongly abstained. A label-free score surfaced the same
+defect the labelled metric measured.
+
+*Honest limit:* confidence is a triage signal, not a correctness estimate. Grounding scores
+each sentence against the whole cited chunk, so a short answer citing a long passage can
+score zero while being correct — that happens in this queue, and it is why the score ranks
+attention rather than claiming accuracy.
 
 ## Reproducibility and limitations
 
