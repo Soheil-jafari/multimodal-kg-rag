@@ -1,0 +1,43 @@
+# --- secrets: never tracked. Code reads keys from the environment only. ---
+.env
+.env.*
+!.env.example
+
+# --- python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# --- editor / IDE state ---
+.idea/
+.vscode/
+.claude/
+
+# --- notebooks are not part of this project ---
+*.ipynb
+
+# --- raw dataset (pulled from the HF hub on demand) ---
+data/
+
+# --- derived corpus artifacts: chunk stores, FAISS indices, crops, KG pickles.
+# ~55 MB and fully regenerable from scripts/ — see reports/scale500/README.md.
+# The experiment log lives in the same directory and IS tracked, so the exclusion
+# is written per-entry rather than on the directory itself.
+artifacts/*
+!artifacts/EXPERIMENT_LOG.md
+*.sqlite
+*.sqlite3
+*.faiss
+
+# --- verbose console captures; the committed results supersede them ---
+*.log
+
+# --- intermediate render output: the PDF is tracked, the HTML that produced it is not ---
+reports/FINAL_REPORT.html
+
+# --- model / HF caches ---
+.cache/
