@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 292" width="300" height="292"
+     font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" role="img">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5"
+            orient="auto-start-reverse">
+      <path d="M0,1.5 L9,5 L0,8.5 z" fill="#3f4954"/>
+    </marker>
+    <style>
+      .b   { fill:#ffffff; stroke:#5b6672; stroke-width:.9; }
+      .src { fill:#eceff2; stroke:#12171d; stroke-width:1.7; }
+      .der { fill:#f4f6f8; stroke:#5b6672; stroke-width:.9; }
+      .key { fill:#e3e8ec; stroke:#12171d; stroke-width:1.7; }
+      .t   { fill:#12171d; font-size:11.5px; font-weight:700; text-anchor:middle; }
+      .s   { fill:#48525d; font-size:9.3px; text-anchor:middle; }
+      .u   { fill:#12171d; font-size:9.4px; font-weight:700; text-anchor:middle; }
+      .v   { fill:#48525d; font-size:8.2px; text-anchor:middle; }
+      .m   { fill:#5b6672; font-size:8.6px; text-anchor:middle; font-style:italic; }
+      .ln  { stroke:#3f4954; stroke-width:1.1; fill:none; marker-end:url(#a); }
+      .ln0 { stroke:#3f4954; stroke-width:1.1; fill:none; }
+    </style>
+  </defs>
+
+  <rect class="b" x="45" y="2" width="210" height="32" rx="4"/>
+  <text class="t" x="150" y="16">PubLayNet pages</text>
+  <text class="s" x="150" y="28">region crops, OCR'd</text>
+  <path class="ln" d="M150,34 L150,45"/>
+
+  <rect class="src" x="24" y="47" width="252" height="34" rx="4"/>
+  <text class="t" x="150" y="62">SQLite chunk store</text>
+  <text class="s" x="150" y="74">source of truth &#183; chunk_id key</text>
+
+  <text class="m" x="150" y="95">derived, joined by chunk_id</text>
+  <path class="ln" d="M110,81 C80,88 62,90 47,101"/>
+  <path class="ln0" d="M150,81 L150,87"/>
+  <path class="ln" d="M150,97 L150,101"/>
+  <path class="ln" d="M190,81 C220,88 238,90 253,101"/>
+
+  <rect class="der" x="0" y="104" width="94" height="38" rx="4"/>
+  <text class="u" x="47" y="120">BGE text</text>
+  <text class="v" x="47" y="133">layout | naive</text>
+
+  <rect class="der" x="103" y="104" width="94" height="38" rx="4"/>
+  <text class="u" x="150" y="120">BiomedCLIP</text>
+  <text class="v" x="150" y="133">crops + captions</text>
+
+  <rect class="der" x="206" y="104" width="94" height="38" rx="4"/>
+  <text class="u" x="253" y="120">knowledge graph</text>
+  <text class="v" x="253" y="133">8 predicates</text>
+
+  <path class="ln" d="M47,142 C62,155 80,157 110,164"/>
+  <path class="ln" d="M150,142 L150,164"/>
+  <path class="ln" d="M253,142 C238,155 220,157 190,164"/>
+
+  <rect class="key" x="10" y="167" width="280" height="48" rx="4"/>
+  <text class="t" x="150" y="182">flag-driven retriever</text>
+  <text class="s" x="150" y="195">one retrieve() path &#183; text &#183; caption-link &#183; page-crop</text>
+  <text class="s" x="150" y="207">clip-image &#183; graph-hop &#183; + cross-encoder rerank</text>
+  <path class="ln" d="M150,215 L150,228"/>
+
+  <rect class="b" x="20" y="230" width="260" height="44" rx="4"/>
+  <text class="t" x="150" y="246">grounded generation</text>
+  <text class="s" x="150" y="258">inline citations &#183; abstention</text>
+  <text class="s" x="150" y="269">per-sentence grounding check</text>
+</svg>

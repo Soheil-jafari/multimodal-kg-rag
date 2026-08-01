@@ -17,8 +17,28 @@ venv/
 .vscode/
 .claude/
 
+# --- OS / filesystem noise ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
 # --- notebooks are not part of this project ---
 *.ipynb
+.ipynb_checkpoints/
+
+# --- scratch, backups and editor swap files ---
+tmp/
+scratch/
+*.tmp
+*.bak
+*.orig
+*.rej
+*~
+*.swp
+*.swo
+build/
+dist/
+.ruff_cache/
 
 # --- raw dataset (pulled from the HF hub on demand) ---
 data/
@@ -38,6 +58,11 @@ artifacts/*
 
 # --- intermediate render output: the PDF is tracked, the HTML that produced it is not ---
 reports/FINAL_REPORT.html
+
+# --- the crop-embedded gold-set worksheet: a personal verification surface, not a
+# deliverable. 1.1 MB of inlined table images, regenerable with
+# scripts/render_gold_review.py. Its text twin gold_review.md IS tracked. ---
+reports/scale500/gold_review.html
 
 # --- model / HF caches ---
 .cache/

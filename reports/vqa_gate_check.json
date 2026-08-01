@@ -1,0 +1,322 @@
+[
+  {
+    "qid": "q060",
+    "question": "What was the mean age in years of the study cohort?",
+    "gold": [
+      "val00000:409598:r5"
+    ],
+    "with transcription": {
+      "crops_in_context": 5,
+      "passed": 3,
+      "selected": [
+        "val00000:409598:r5",
+        "val00000:415100:r6"
+      ],
+      "gold_crop_retrieved": true,
+      "gold_crop_passed_gate": true,
+      "gold_crop_selected": true,
+      "gate": [
+        {
+          "chunk_id": "val00000:409598:r5",
+          "score": 0.5521,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:416029:r11",
+          "score": 0.5647,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415100:r6",
+          "score": 0.5515,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:416125:r13",
+          "score": 0.5251,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:415312:r14",
+          "score": 0.4959,
+          "on_supported_page": false,
+          "passed": false
+        }
+      ]
+    },
+    "without (500-page)": {
+      "crops_in_context": 5,
+      "passed": 3,
+      "selected": [
+        "val00000:409598:r5",
+        "val00000:415100:r6"
+      ],
+      "gold_crop_retrieved": true,
+      "gold_crop_passed_gate": true,
+      "gold_crop_selected": true,
+      "gate": [
+        {
+          "chunk_id": "val00000:409598:r5",
+          "score": 0.5568,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:416029:r11",
+          "score": 0.5744,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415100:r6",
+          "score": 0.5313,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:416125:r13",
+          "score": 0.5262,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:415312:r14",
+          "score": 0.5408,
+          "on_supported_page": false,
+          "passed": false
+        }
+      ]
+    }
+  },
+  {
+    "qid": "q061",
+    "question": "What was the unadjusted relative risk (95% CI) of lung cancer in the highest cumulative PAH exposure category?",
+    "gold": [
+      "val00000:415199:r10"
+    ],
+    "with transcription": {
+      "crops_in_context": 3,
+      "passed": 1,
+      "selected": [
+        "val00000:415199:r10"
+      ],
+      "gold_crop_retrieved": true,
+      "gold_crop_passed_gate": true,
+      "gold_crop_selected": true,
+      "gate": [
+        {
+          "chunk_id": "val00000:415497:r17",
+          "score": 0.5534,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415600:r9",
+          "score": 0.5311,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415199:r10",
+          "score": 0.4589,
+          "on_supported_page": true,
+          "passed": true
+        }
+      ]
+    },
+    "without (500-page)": {
+      "crops_in_context": 3,
+      "passed": 1,
+      "selected": [
+        "val00000:415199:r10"
+      ],
+      "gold_crop_retrieved": true,
+      "gold_crop_passed_gate": true,
+      "gold_crop_selected": true,
+      "gate": [
+        {
+          "chunk_id": "val00000:415497:r17",
+          "score": 0.5492,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415600:r9",
+          "score": 0.503,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415199:r10",
+          "score": 0.536,
+          "on_supported_page": true,
+          "passed": true
+        }
+      ]
+    }
+  },
+  {
+    "qid": "q062",
+    "question": "In the 1996 survey, what percentage of respondents said their well water had ever been tested?",
+    "gold": [
+      "val00000:415448:r15"
+    ],
+    "with transcription": {
+      "crops_in_context": 3,
+      "passed": 3,
+      "selected": [
+        "val00000:415448:r15",
+        "val00000:415312:r15"
+      ],
+      "gold_crop_retrieved": true,
+      "gold_crop_passed_gate": true,
+      "gold_crop_selected": true,
+      "gate": [
+        {
+          "chunk_id": "val00000:415448:r15",
+          "score": 0.7032,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:415312:r15",
+          "score": 0.4783,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:415448:r16",
+          "score": 0.4703,
+          "on_supported_page": true,
+          "passed": true
+        }
+      ]
+    },
+    "without (500-page)": {
+      "crops_in_context": 3,
+      "passed": 3,
+      "selected": [
+        "val00000:415448:r15",
+        "val00000:415448:r16"
+      ],
+      "gold_crop_retrieved": true,
+      "gold_crop_passed_gate": true,
+      "gold_crop_selected": true,
+      "gate": [
+        {
+          "chunk_id": "val00000:415448:r15",
+          "score": 0.7195,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:415312:r15",
+          "score": 0.4967,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:415448:r16",
+          "score": 0.5241,
+          "on_supported_page": true,
+          "passed": true
+        }
+      ]
+    }
+  },
+  {
+    "qid": "q063",
+    "question": "In Milham (1988), what was the SMR (95% CI) for brain tumor?",
+    "gold": [
+      "val00000:415100:r6"
+    ],
+    "with transcription": {
+      "crops_in_context": 5,
+      "passed": 1,
+      "selected": [
+        "val00000:415100:r6"
+      ],
+      "gold_crop_retrieved": true,
+      "gold_crop_passed_gate": true,
+      "gold_crop_selected": true,
+      "gate": [
+        {
+          "chunk_id": "val00000:415100:r6",
+          "score": 0.6121,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:415199:r10",
+          "score": 0.4363,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415497:r17",
+          "score": 0.4773,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415448:r16",
+          "score": 0.3262,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415821:r14",
+          "score": 0.4685,
+          "on_supported_page": false,
+          "passed": false
+        }
+      ]
+    },
+    "without (500-page)": {
+      "crops_in_context": 5,
+      "passed": 1,
+      "selected": [
+        "val00000:415100:r6"
+      ],
+      "gold_crop_retrieved": true,
+      "gold_crop_passed_gate": true,
+      "gold_crop_selected": true,
+      "gate": [
+        {
+          "chunk_id": "val00000:415100:r6",
+          "score": 0.6132,
+          "on_supported_page": true,
+          "passed": true
+        },
+        {
+          "chunk_id": "val00000:415199:r10",
+          "score": 0.4901,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415497:r17",
+          "score": 0.4879,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415448:r16",
+          "score": 0.3529,
+          "on_supported_page": false,
+          "passed": false
+        },
+        {
+          "chunk_id": "val00000:415821:r14",
+          "score": 0.4649,
+          "on_supported_page": false,
+          "passed": false
+        }
+      ]
+    }
+  }
+]

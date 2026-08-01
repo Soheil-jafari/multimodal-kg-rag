@@ -1,0 +1,168 @@
+{
+  "part_a": [
+    {
+      "qid": "q060",
+      "gold": "val00000:409598:r5",
+      "phase8 (OCR, no expansion)": {
+        "text_rank": 31,
+        "pool_rank": null,
+        "topk_rank": null
+      },
+      "caption+transcription": {
+        "text_rank": 21,
+        "pool_rank": null,
+        "topk_rank": null
+      },
+      "+ page expansion": {
+        "text_rank": 21,
+        "pool_rank": 6,
+        "topk_rank": 1
+      }
+    },
+    {
+      "qid": "q061",
+      "gold": "val00000:415199:r10",
+      "phase8 (OCR, no expansion)": {
+        "text_rank": 19,
+        "pool_rank": null,
+        "topk_rank": null
+      },
+      "caption+transcription": {
+        "text_rank": 18,
+        "pool_rank": null,
+        "topk_rank": null
+      },
+      "+ page expansion": {
+        "text_rank": 18,
+        "pool_rank": 3,
+        "topk_rank": 6
+      }
+    },
+    {
+      "qid": "q062",
+      "gold": "val00000:415448:r15",
+      "phase8 (OCR, no expansion)": {
+        "text_rank": 1,
+        "pool_rank": 1,
+        "topk_rank": 1
+      },
+      "caption+transcription": {
+        "text_rank": 1,
+        "pool_rank": 1,
+        "topk_rank": 1
+      },
+      "+ page expansion": {
+        "text_rank": 1,
+        "pool_rank": 1,
+        "topk_rank": 1
+      }
+    },
+    {
+      "qid": "q063",
+      "gold": "val00000:415100:r6",
+      "phase8 (OCR, no expansion)": {
+        "text_rank": 1,
+        "pool_rank": 1,
+        "topk_rank": 1
+      },
+      "caption+transcription": {
+        "text_rank": 1,
+        "pool_rank": 1,
+        "topk_rank": 1
+      },
+      "+ page expansion": {
+        "text_rank": 1,
+        "pool_rank": 1,
+        "topk_rank": 1
+      }
+    }
+  ],
+  "part_b": {
+    "phase-8 retrieval (gold crop missing)": {
+      "qid": "q061",
+      "question": "What was the unadjusted relative risk (95% CI) of lung cancer in the highest cumulative PAH exposure category?",
+      "expected": "1.20 (1.11-1.29)",
+      "gold_crop": "val00000:415199:r10",
+      "gold_crop_retrieved": false,
+      "crops_in_context": [
+        "val00000:415600:r9",
+        "val00000:415497:r17"
+      ],
+      "runs": {
+        "gate_off": {
+          "threshold": 0.0,
+          "answer": "insufficient evidence in the corpus",
+          "abstained": true,
+          "vqa": {
+            "used": true,
+            "crops": [
+              "val00000:415600:r9",
+              "val00000:415497:r17"
+            ]
+          }
+        },
+        "gate_on": {
+          "threshold": 0.3,
+          "answer": "insufficient evidence in the corpus",
+          "abstained": true,
+          "vqa": {
+            "used": false,
+            "crops": [],
+            "gate": [
+              {
+                "chunk_id": "val00000:415600:r9",
+                "score": 0.5311,
+                "on_supported_page": false,
+                "passed": false
+              },
+              {
+                "chunk_id": "val00000:415497:r17",
+                "score": 0.5534,
+                "on_supported_page": false,
+                "passed": false
+              }
+            ],
+            "gate_threshold": 0.3
+          }
+        }
+      }
+    },
+    "phase-9 retrieval (after part A)": {
+      "qid": "q061",
+      "question": "What was the unadjusted relative risk (95% CI) of lung cancer in the highest cumulative PAH exposure category?",
+      "expected": "1.20 (1.11-1.29)",
+      "gold_crop": "val00000:415199:r10",
+      "gold_crop_retrieved": true,
+      "crops_in_context": [
+        "val00000:415497:r17",
+        "val00000:415600:r9",
+        "val00000:415199:r10"
+      ],
+      "runs": {
+        "gate_off": {
+          "threshold": 0.0,
+          "answer": "The unadjusted relative risk (95% CI) of lung cancer in the highest cumulative PAH exposure category is 3.95 (1.56–9.98) [val00000:415497:r17].",
+          "abstained": false,
+          "vqa": {
+            "used": true,
+            "crops": [
+              "val00000:415497:r17",
+              "val00000:415600:r9"
+            ]
+          }
+        },
+        "gate_on": {
+          "threshold": 0.3,
+          "answer": "The unadjusted relative risk (95% CI) of lung cancer in the highest cumulative PAH exposure category (>80 μg/m²) is 3.49 (2.05–5.90) [val00000:415199:r10].",
+          "abstained": false,
+          "vqa": {
+            "used": true,
+            "crops": [
+              "val00000:415199:r10"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
