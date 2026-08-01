@@ -1,0 +1,23 @@
+# Closed predicate schema for the biomedical domain pack. Extraction maps into
+# this list only; out-of-schema predicates are dropped at ingest. Derived by
+# consolidating free-extraction output over sampled chunks — directional quantity
+# relations, epidemiological occurrence, and chemical transformation dominated.
+# Vague catch-alls (associated_with, related_to, similar_to, compared_with) are
+# deliberately excluded: they over-connect the graph without adding signal.
+predicates:
+  - name: treats
+    description: Intervention or therapy applied against a condition. subject=intervention, object=condition.
+  - name: causes
+    description: Factor produces or leads to a condition, effect, or product. subject=cause, object=effect.
+  - name: inhibits
+    description: Agent suppresses or blocks a process, molecule, or pathway. subject=agent, object=target.
+  - name: increases
+    description: Factor linked to a higher level, amount, or risk of a quantity or outcome. subject=factor, object=quantity.
+  - name: decreases
+    description: Factor linked to a lower level, amount, or risk of a quantity or outcome. subject=factor, object=quantity.
+  - name: transforms_to
+    description: Substance converted, degraded, or oxidized into another. subject=reactant, object=product.
+  - name: occurs_in
+    description: Condition, organism, or marker observed or prevalent in a population, sample, or site. subject=entity, object=population.
+  - name: measured_by
+    description: Outcome or quantity quantified by a method, assay, or metric. subject=quantity, object=method.
