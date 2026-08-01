@@ -1,0 +1,16 @@
+# Pipeline B — multimodal + knowledge-graph RAG. Every retrieval enhancement ON.
+#
+# use_caption_anchor was missing from this file before Phase 7.5 even though every
+# "enhanced" run had it on — the file was not being read, so the omission was
+# invisible. use_vqa stays off here: it is Phase 8's flag and costs a vision call
+# per figure question, so it is opted into explicitly (configs/enhanced_vqa.yaml).
+extends: default.yaml
+name: enhanced
+
+flags:
+  use_layout_chunking: true
+  use_clip_images: true
+  use_caption_anchor: true
+  use_kg: true
+  use_rerank: true
+  allow_abstain: true

@@ -1,0 +1,8 @@
+# Reproduces the PUBLISHED ablation (reports/ablation.md), which ran on general
+# CLIP ViT-B/32 before Phase 7. Kept so those numbers stay regenerable now that
+# BiomedCLIP is the default. ONE key differs from enhanced.yaml.
+extends: enhanced.yaml
+name: enhanced_clip
+
+models:
+  image_embedding_model: clip-ViT-B-32

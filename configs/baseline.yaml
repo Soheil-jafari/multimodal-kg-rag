@@ -1,0 +1,11 @@
+# Pipeline A — text-only dense RAG. Every enhancement OFF.
+#
+# Only ONE key is overridden: `extends` already gives every flag false, so this file
+# says just what makes baseline baseline. allow_abstain is TRUE here (this file used
+# to say false, which never matched any run) because abstention is a capability both
+# pipelines get and is *measured*, not ablated — see EXPERIMENT_LOG Phase 6B/C.
+extends: default.yaml
+name: baseline
+
+flags:
+  allow_abstain: true

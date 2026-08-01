@@ -1,0 +1,78 @@
+# Shared defaults. baseline.yaml / enhanced.yaml `extends:` this and override ONLY
+# the keys they change. API keys are NOT here — they come from the environment.
+#
+# These values are LIVE: platform_core.config.AppConfig.from_yaml reads this file,
+# resolves `extends:`, and rejects unknown keys. Editing a value here changes
+# behaviour with no code change (see EXPERIMENT_LOG Phase 7.5).
+#
+# Paths are corpus-scoped, not config-scoped: baseline and enhanced share one chunk
+# DB and one index dir on purpose, so both read identical source chunks. The
+# chunker flag selects between two co-resident text indices; the image encoder
+# selects its own index basename.
+name: default
+domain_pack: biomed
+
+backends:
+  llm: openai
+  graph: networkx        # swap to "neo4j" with no code change
+  vector_store: faiss
+
+models:
+  llm_model: gpt-4o-mini
+  text_embedding_model: BAAI/bge-base-en-v1.5
+  # must be a key of platform_core.llm.embeddings.IMAGE_ENCODERS
+  # BiomedCLIP is the default from Phase 8 on (Phase 7: sigma 6.7x, #1-vs-#2 margin
+  # 52x, image recall@1 0.22->0.44). configs/enhanced_clip.yaml reproduces the
+  # published general-CLIP ablation.
+  image_embedding_model: microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224
+  reranker_model: cross-encoder/ms-marco-MiniLM-L-6-v2
+  device: cpu            # no CUDA torch build on this box; code is device-agnostic
+  embed_batch_size: 32
+
+# The corpus is part of the experiment, so it is declared here rather than passed on
+# a command line. This is the 50-page DEV corpus that Phases 1-9 ran on; the
+# 500-page scale-up overrides this section and the paths (configs/scale500.yaml).
+# `tag` prefixes every page_uid ("val00000:409598"), so tags must stay unique.
+ingest:
+  repo: jordanparker6/publaynet
+  shards:
+    - file: data/validation-00000-of-00008-a39835b959a7216c.parquet
+      tag: val00000
+  pages_per_shard: 50
+
+paths:
+  publaynet_root: data/publaynet
+  chunk_db: artifacts/dev/chunks.sqlite
+  index_dir: artifacts/dev/index
+  graph_store: artifacts/dev/kg/graph.pkl
+  crops_dir: artifacts/dev/crops
+  reports_dir: reports
+  gold_set: domain_packs/biomed/gold/gold_set.jsonl
+
+# NOTE: 10/10, not the 8/5 this file used to claim — these are the values the
+# published ablation actually ran with (hard-coded in scripts/ablate.py before
+# Phase 7.5 wired the loader). Kept as-is so reports/ablation.md stays reproducible.
+retrieval:
+  top_k: 10
+  rerank_top_k: 10
+  image_k: 5
+  kg_hops: 2
+
+generation:
+  answer_model: gpt-4o
+  verify_model: gpt-4o-mini
+  vqa_model: gpt-4o
+  abstain_min_score: 0.45
+  grounding_min_sim: 0.45
+  grounding_border: 0.08
+  grounding_llm_verify: true
+
+flags:
+  use_layout_chunking: false
+  use_clip_images: false
+  use_caption_anchor: false
+  use_kg: false
+  use_rerank: false
+  use_vqa: false
+  use_cot: false
+  allow_abstain: false

@@ -1,0 +1,25 @@
+# Pipeline B + VQA — the default config for the final run.
+#
+# Phase 8 measured two problems and Phase 9 fixed both; this config carries both fixes:
+#   use_vqa             — read values OUT of a retrieved crop (vision), instead of out
+#                         of OCR text that has lost the table's grid.
+#   use_table_vqa_text  — index each table by its CAPTION + vision-read transcription.
+#                         Requires scripts/transcribe_tables.py; reads
+#                         index/text_layout_tablevqa. NOTE: on its own this does NOT
+#                         make tables retrievable (Phase 9 part A) — a table states
+#                         values, not the concepts linking them to a question.
+#   use_page_crop_expansion — the fix that DOES work: pull the crops of any page whose
+#                         prose was retrieved into the candidate pool, so a table is
+#                         reached through its page rather than on its own text.
+# generation.vqa_min_crop_score is the SAFETY gate (Phase 8 finding #3): a crop must
+# be relevant to the question before a vision model is allowed to read numbers off it.
+#
+# Opted into explicitly because VQA costs a vision call per question that retrieves a
+# relevant crop.
+extends: enhanced.yaml
+name: enhanced_vqa
+
+flags:
+  use_vqa: true
+  use_table_vqa_text: true
+  use_page_crop_expansion: true

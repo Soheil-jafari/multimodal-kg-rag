@@ -1,0 +1,55 @@
+# The 500-page scale-up corpus (Phase 10).
+#
+# Differs from configs/enhanced_vqa.yaml — the phase-9 default — in exactly two
+# sections: WHICH pages the corpus is (`ingest`) and WHERE its derived artifacts
+# live (`paths`). Flags, models, retrieval knobs and generation settings are all
+# inherited, so nothing about the pipeline changes with corpus size; only its input
+# does. That is the property that makes a 50-page result and a 500-page result
+# comparable.
+#
+# Paths point at artifacts/scale500/ rather than artifacts/dev/ so the dev corpus
+# that produced reports/ablation.md stays intact and regenerable. Same reason
+# reports_dir is redirected: the published dev tables must not be overwritten by a
+# run on a different corpus.
+extends: enhanced_vqa.yaml
+name: scale500
+
+# 5 validation shards x 100 pages = 500. Spread across shards rather than taken
+# deep from one, for paper diversity: PubLayNet pages are stored in COCO-id order,
+# so consecutive rows are often from the same document. val00000's first 100 pages
+# are a superset of the dev 50, so every dev finding (e.g. the SARS page
+# val00000:415624) is still present and re-checkable in the larger corpus.
+ingest:
+  repo: jordanparker6/publaynet
+  shards:
+    - file: data/validation-00000-of-00008-a39835b959a7216c.parquet
+      tag: val00000
+    - file: data/validation-00001-of-00008-55d49c1129bdb061.parquet
+      tag: val00001
+    - file: data/validation-00002-of-00008-6ad229ccde5e5948.parquet
+      tag: val00002
+    - file: data/validation-00003-of-00008-a9cf133064cc6e1c.parquet
+      tag: val00003
+    - file: data/validation-00004-of-00008-ecd26558521e1d72.parquet
+      tag: val00004
+  pages_per_shard: 100
+
+# Table transcription is deliberately NOT run at this scale, and use_table_vqa_text is
+# therefore off. This is an evidence-based exclusion, not a budget cut dressed as one:
+# phase 9 measured the transcription to contribute NOTHING to retrievability (gold table
+# rank went 31->40 and 19->36, cosine 0.536->0.459) because a table states values, not
+# the concepts that link them to a question. Page-crop expansion was the entire gain and
+# is still on. Consequence, verified rather than assumed (reports/vqa_gate_check.md): the
+# VQA provenance gate now scores table crops on their OCR text instead of a transcription.
+# The gate's primary condition is provenance, not score, so it is unaffected; the score
+# survives only as a low floor among page-eligible crops.
+flags:
+  use_table_vqa_text: false
+
+paths:
+  chunk_db: artifacts/scale500/chunks.sqlite
+  index_dir: artifacts/scale500/index
+  graph_store: artifacts/scale500/kg/graph.pkl
+  crops_dir: artifacts/scale500/crops
+  reports_dir: reports/scale500
+  gold_set: domain_packs/biomed/gold/gold_set_scale500.jsonl

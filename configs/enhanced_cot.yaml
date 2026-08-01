@@ -1,0 +1,16 @@
+# Enhanced + chain-of-thought, on the 500-page corpus.
+#
+# use_cot changes only how an answer is PRODUCED — the model reasons over the retrieved
+# passages before answering, and the trace is captured for explainability. It touches
+# nothing in retrieval, so it is orthogonal to the ablation series and is deliberately
+# NOT one of its steps: the six-config results in reports/scale500/ are frozen, and CoT
+# is measured as a separate paired comparison against them
+# (scripts/cot_compare.py -> reports/scale500/cot_compare.md).
+#
+# Everything downstream still scores the ANSWER section alone — citations, the abstention
+# match, per-sentence grounding — so turning this on does not change what the metrics mean.
+extends: scale500.yaml
+name: scale500_cot
+
+flags:
+  use_cot: true
