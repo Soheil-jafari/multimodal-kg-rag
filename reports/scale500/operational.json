@@ -1,0 +1,76 @@
+{
+  "machine": {
+    "platform": "Windows-10",
+    "python": "3.11.9",
+    "cpu_logical": 12,
+    "cpu_physical": 6,
+    "ram_total_gb": 15.7,
+    "device": "cpu (no CUDA build installed)"
+  },
+  "retrieval": {
+    "n_queries": 127,
+    "warmup": 3,
+    "p50_ms": 3665.7,
+    "p95_ms": 13438.4,
+    "p99_ms": 15300.6,
+    "mean_ms": 4794.5,
+    "min_ms": 759.5,
+    "max_ms": 15893.8,
+    "cold_start_s": 14.6,
+    "rss_baseline_mb": 60.0,
+    "rss_after_load_mb": 2466.0,
+    "rss_peak_mb": 2466.0
+  },
+  "from_logs": {
+    "ingest_shards": [
+      {
+        "shard": "val00000",
+        "pages": 98,
+        "chunks": 1325,
+        "seconds": 1670
+      },
+      {
+        "shard": "val00001",
+        "pages": 98,
+        "chunks": 1136,
+        "seconds": 1424
+      },
+      {
+        "shard": "val00002",
+        "pages": 98,
+        "chunks": 1110,
+        "seconds": 1495
+      },
+      {
+        "shard": "val00003",
+        "pages": 98,
+        "chunks": 1079,
+        "seconds": 1359
+      },
+      {
+        "shard": "val00004",
+        "pages": 98,
+        "chunks": 969,
+        "seconds": 1233
+      }
+    ],
+    "ingest_total": {
+      "pages": 490,
+      "chunks": 5619,
+      "minutes": 119.7,
+      "sec_per_page": 14.66
+    },
+    "kg_build": {
+      "prompt_tokens": 3747044,
+      "completion_tokens": 129347,
+      "total_tokens": 3876391,
+      "usd": 0.6397,
+      "chunks": 4776
+    },
+    "logged_costs": {
+      "ablation (3 of 6 configs, resumed invocation)": 2.5,
+      "chain-of-thought paired run": 0.55,
+      "VQA-vs-text paired run": 0.126
+    }
+  }
+}
