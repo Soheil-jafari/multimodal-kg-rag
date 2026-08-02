@@ -42,7 +42,56 @@ caption→crop route and cross-encoder reranking each have more to discriminate 
 Answer correctness does **not** track the retrieval gap (0.59 → 0.69, +17%). Retrieval is
 no longer the binding constraint on answer quality; see limitations 1–4.
 
+**Uncertainty.** 95% bootstrap intervals over questions (10,000 resamples; full tables in
+`confidence_intervals.md`). Baseline R@5 **0.57 [0.49, 0.66]** → enhanced **0.91 [0.86,
+0.96]** — non-overlapping, so the retrieval result is not a sampling artefact. Correctness
+baseline **0.59 [0.51, 0.67]** → enhanced **0.69 [0.61, 0.77]**: the marginal intervals
+overlap, but the *paired* difference — the same resampled questions scored under both
+configs — is **+0.099 [+0.034, +0.168]**, which excludes zero. Both are reported because
+the marginal overlap is the more conservative reading and the paired interval is the more
+powerful one, and they disagree about how confident to be.
+
+Runs are **single-seed**, a deliberate consequence of the budget: repeating a six-config
+ablation costs another ~$5. Two separate uncertainties are therefore reported rather than
+conflated — the bootstrap intervals above capture *sampling* uncertainty, and *run-to-run*
+variance was measured directly rather than assumed: re-running an identical configuration
+over the same 17 multi_hop questions moved correctness by **0.029** (§6). Any effect at or
+below **±0.03** is indistinguishable from running the same system twice.
+
 ## 2. Full ablation
+
+**Where the win actually comes from — stated before the table, not buried under it.**
+The retrieval improvement is almost entirely **layout-aware chunking and caption
+anchoring**, with reranking third. It is **not** image embeddings, and on this corpus it
+is **not** the knowledge graph. Paired bootstrap on each step's difference:
+
+| step | ΔR@5 | ΔCorrect | verdict |
+|---|---|---|---|
+| baseline → +layout | +0.190 [+0.107, +0.274] | +0.065 [+0.000, +0.132] | R@5 real |
+| +layout → +clip | **+0.000 [+0.000, +0.000]** | +0.000 [−0.018, +0.023] | **within noise** |
+| +clip → +caption | +0.069 [+0.035, +0.107] | +0.000 [−0.030, +0.030] | R@5 real |
+| +caption → +kg | +0.026 [+0.000, +0.059] | +0.030 [+0.004, +0.064] | **on the ±0.03 floor** |
+| +kg → +rerank | +0.056 [+0.022, +0.097] | +0.004 [−0.037, +0.048] | R@5 real |
+
+**`+clip` adds exactly nothing** — the ΔR@5 interval is [0.000, 0.000], not merely small.
+BiomedCLIP fixed the score *distribution* (Phase 7) but the caption anchor, not image
+similarity, is what makes a figure findable.
+
+**The knowledge graph's contribution here is within the noise floor.** Its retrieval
+effect is +0.026 [+0.000, +0.059] — interval touching zero, magnitude below the floor. Its
+correctness effect is +0.030 [+0.004, +0.064]: the sampling interval excludes zero, but the
+magnitude *is* the measured run-to-run floor, so it cannot be separated from re-running the
+same system. The honest claim is that the KG did not demonstrably help on this corpus.
+
+**And the diagnosis matters more than the number.** This corpus has no document
+identifier, so page = paper, which forces every `multi_hop` question to be answerable
+*within a single page*. That is precisely the regime where a graph helps least: the two
+hops are already in the same retrieval unit's neighbourhood, and dense text retrieval
+reaches them without traversing anything. A knowledge graph earns its cost when evidence is
+scattered **across documents** — that corpus is exactly what PubLayNet cannot provide here.
+So this is a null result about *this corpus*, not about GraphRAG; the architecture is
+`paper_id`-agnostic precisely so a real multi-document corpus can be swapped in and the
+question asked properly. Reported as a diagnosed limitation rather than presented as a win.
 
 | config | R@5 | P@5 | MRR | nDCG | Correct | Faith | Decis |
 |---|---|---|---|---|---|---|---|
@@ -74,22 +123,33 @@ What each step buys:
 ## 3. Per category
 
 **No category carries a low-sample flag.** First time in the project — Phase 6 had
-`figure_value` at n=4 and `treats` at n=1, both footnoted as not meaningful.
+`figure_value` at n=4 and `treats` at n=1, both footnoted as not meaningful. The bootstrap
+intervals below say what "no flag" is and is not worth: n=8 still buys an interval half a
+point wide.
 
-| category | n | baseline R@5 → enhanced | baseline Correct → enhanced |
-|---|---:|---|---|
-| single_fact | 56 | 0.61 → 0.89 | 0.66 → 0.80 |
-| multi_hop | 17 | 0.41 → 0.82 | 0.35 → 0.35 |
-| figure | 12 | 0.38 → 1.00 | 0.29 → 0.25 |
-| figure_value | 8 | 0.62 → 0.88 | 0.38 → 0.75 |
-| text_derived | 23 | 0.70 → 1.00 | 0.83 → 0.87 |
-| unanswerable | 11 | — | decision 0.82 → 0.91 |
+Point estimates with 95% bootstrap intervals, baseline → enhanced:
 
-**`figure_value` moved for the first time.** In Phase 6 this category was flat at 0.50
-correctness across every single config — nothing the pipeline did touched it, which is what
-motivated Phases 8 and 9. Here it responds: correctness 0.38 → 0.75, MRR 0.28 → 0.83. The
-mechanism is the Phase-9 fix working at scale — page-crop expansion puts the table in the
-candidate pool, and reranking on caption-plus-text lifts it to the top.
+| category | n | R@5 baseline | R@5 enhanced | Correct baseline | Correct enhanced |
+|---|---:|---|---|---|---|
+| single_fact | 56 | 0.61 [0.48, 0.73] | 0.89 [0.80, 0.96] | 0.66 [0.54, 0.78] | 0.80 [0.70, 0.90] |
+| multi_hop | 17 | 0.41 [0.24, 0.59] | 0.82 [0.68, 0.94] | 0.35 [0.18, 0.53] | 0.35 [0.18, 0.53] |
+| figure | 12 | 0.38 [0.25, 0.50] | 1.00 [1.00, 1.00] | 0.29 [0.08, 0.50] | 0.25 [0.08, 0.46] |
+| figure_value | 8 | 0.62 [0.25, 0.88] | 0.88 [0.62, 1.00] | 0.38 [0.12, 0.75] | 0.75 [0.38, 1.00] |
+| text_derived | 23 | 0.70 [0.52, 0.87] | 1.00 [1.00, 1.00] | 0.83 [0.67, 0.96] | 0.87 [0.74, 0.98] |
+| unanswerable | 11 | — | — | decision 0.82 [0.55, 1.00] | 0.91 [0.73, 1.00] |
+
+`single_fact` (n=56) is the only category whose retrieval intervals separate cleanly.
+`figure` and `text_derived` reach a degenerate [1.00, 1.00] because every resample recalls
+every gold chunk. Everything at n ≤ 17 should be read as direction, not measurement.
+
+**`figure_value` moved for the first time — and the interval says how much to trust it.**
+In Phase 6 this category was flat at 0.50 correctness across every single config, which is
+what motivated Phases 8 and 9. Here it responds: correctness 0.38 → 0.75, MRR 0.28 → 0.83.
+But at n=8 those are **0.38 [0.12, 0.75] → 0.75 [0.38, 1.00]** — the intervals overlap
+heavily, so this is *not* a statistically separated improvement. The mechanism is
+independently verified (page-crop expansion took gold-crop retrieval from 2/4 to 8/8, §6),
+which is the stronger evidence here; the correctness jump is consistent with it rather than
+proof of it. Eight questions cannot carry more than that.
 
 **`text_derived` remains the bias guard and it still holds.** These questions are written
 from a passage with the graph never consulted, and they score highest at baseline (0.83
@@ -99,20 +159,28 @@ set does not flatter the graph pipeline.
 
 ## 4. Per predicate (enhanced config)
 
+Point estimates with 95% bootstrap intervals:
+
 | predicate | n | Correct | R@5 |
 |---|---:|---|---|
-| inhibits | 8 | 0.88 | 1.00 |
-| transforms_to | 7 | 0.86 | 0.86 |
-| measured_by | 7 | 0.86 | 0.86 |
-| increases | 11 | 0.82 | 0.86 |
-| causes | 12 | 0.79 | 1.00 |
-| decreases | 9 | 0.61 | 0.78 |
-| treats | 15 | 0.60 | 0.90 |
-| **occurs_in** | 16 | **0.31** | 0.81 |
+| inhibits | 8 | 0.88 [0.62, 1.00] | 1.00 [1.00, 1.00] |
+| transforms_to | 7 | 0.86 [0.57, 1.00] | 0.86 [0.57, 1.00] |
+| measured_by | 7 | 0.86 [0.57, 1.00] | 0.86 [0.57, 1.00] |
+| increases | 11 | 0.82 [0.55, 1.00] | 0.86 [0.64, 1.00] |
+| causes | 12 | 0.79 [0.58, 0.96] | 1.00 [1.00, 1.00] |
+| decreases | 9 | 0.61 [0.33, 0.83] | 0.78 [0.50, 1.00] |
+| treats | 15 | 0.60 [0.40, 0.80] | 0.90 [0.74, 1.00] |
+| **occurs_in** | 16 | **0.31 [0.12, 0.50]** | 0.81 [0.60, 1.00] |
 
-Every predicate now has n ≥ 7. The predicate mix itself shifted with the corpus: `treats`
-went from 5% of dev edges to 17%, `transforms_to` from 6% to 2% — the 500-page corpus is
-more clinical and less chemical than the dev slice.
+Every predicate now has n ≥ 7, but **every interval here is wide** — the narrowest spans
+0.38 and most span more. Only `occurs_in` separates from the rest: its interval tops out at
+0.50, below every other predicate's point estimate, so its weakness is the one
+per-predicate result the sample can actually support. The others are ordered but not
+distinguished, and no ranking among them should be read as real.
+
+The predicate mix itself shifted with the corpus: `treats` went from 5% of dev edges to
+17%, `transforms_to` from 6% to 2% — the 500-page corpus is more clinical and less chemical
+than the dev slice.
 
 ---
 
@@ -323,7 +391,55 @@ consistent: neither text nor vision can be trusted to quote a table value unsupe
 
 ---
 
-## 7. Reproducing
+## 7. Operational characteristics
+
+Measured on the development machine, not projected. Latency and memory were timed locally
+with **no model API calls**; corpus-build time and token spend come from the logs of the
+runs that produced the results above. Anything neither locally measurable nor recorded is
+marked **not measured** rather than estimated. Full detail in `operational.md`.
+
+Machine: Windows, 6 physical / 12 logical cores, 15.7 GB RAM, Python 3.11, **CPU only** —
+no CUDA build installed, though the code is device-agnostic.
+
+**Query latency, retrieval path only** (query embedding → text search → caption / page-crop
+/ image / graph expansion → cross-encoder rerank), over all 127 gold questions:
+
+| p50 | p95 | p99 | mean | min / max | cold start |
+|---:|---:|---:|---:|---:|---:|
+| 3.67 s | 13.44 s | 15.30 s | 4.79 s | 0.76 s / 15.89 s | 14.6 s |
+
+The spread is wide because the cross-encoder reranks a pool whose size depends on how many
+routes fired: a question that triggers caption, page-crop and graph expansion pays for
+reranking all of it. This is CPU inference — the same work on a GPU is a different number.
+Cold start loads three transformer models plus two FAISS indices and the graph, and is paid
+once per process.
+
+**Memory:** 60 MB interpreter baseline → **2,466 MB peak** with everything resident. The
+three models coexist on CPU; on the 4 GB GPU this project targets they would need
+sequencing.
+
+**End-to-end latency including the answer model: not measured.** The harness recorded
+answers and scores per question but never wall-clock, and obtaining it now would cost API
+budget. The retrieval figures above are a lower bound; the answer and grounding calls
+dominate the total.
+
+**Corpus build:** OCR ingest of 490 new pages took **119.7 min** (14.7 s/page, 5,619
+chunks) — per-shard 1670/1424/1495/1359/1233 s. OCR is single-threaded CPU work and
+dominates construction; it is the stage that would gain most from parallelism or a GPU OCR
+backend. KG extraction over 4,776 chunks consumed **3,876,391 tokens for $0.6397**. BGE and
+BiomedCLIP index build wall-clock: **not measured** — not recorded at the time.
+
+**API cost.** Per-config cost is **not measured**: the harness logs no token counts per
+question, and the ablation prints cost per invocation rather than per config. Recorded:
+ablation resumed invocation (3 of 6 configs) **$2.50**, chain-of-thought paired run
+**$0.55**, VQA-vs-text paired run **$0.13**, KG extraction **$0.64**. The first ablation
+invocation crashed on a rate limit before printing its cost line, so the six-config total
+is known only to about **$5** — roughly $0.83 per config at 127 questions, which is a
+division of a measured total, not a separately measured quantity. The answer model is
+capped at 30,000 tokens/minute on this account, which is why the runner backs off and can
+resume from a completed per-question log instead of re-buying it.
+
+## 8. Reproducing
 
 ```
 python -m scripts.ingest              --config configs/scale500.yaml
