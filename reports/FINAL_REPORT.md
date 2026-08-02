@@ -77,6 +77,24 @@ The enhanced configuration does not degrade; it improves. The usual pattern is t
 with small-corpus gains diluting as the corpus grows; here the 50-page numbers *understated*
 the enhancements.
 
+**Uncertainty, stated once.** 95% bootstrap intervals over questions (10,000 resamples).
+Baseline R@5 **0.57 [0.49, 0.66]** → enhanced **0.91 [0.86, 0.96]**, non-overlapping.
+Correctness 0.59 [0.51, 0.67] → 0.69 [0.61, 0.77] overlaps marginally, but the *paired*
+difference is **+0.099 [+0.034, +0.168]**, excluding zero. Runs are single-seed by budget;
+run-to-run variance was measured rather than assumed — an identical configuration re-run
+over the same 17 questions moved correctness by **0.029**, so anything at or below ±0.03 is
+indistinguishable from re-running the same system.
+
+**Where the win comes from — before the table, not under it.** It is layout chunking and
+caption anchoring, with reranking third. It is **not** image embeddings: `+clip`'s ΔR@5 is
+**+0.000 [+0.000, +0.000]**, exactly nothing. And on this corpus it is **not** the
+knowledge graph: ΔR@5 +0.026 [+0.000, +0.059] touches zero, and ΔCorrect +0.030 [+0.004,
++0.064] has a magnitude that *is* the measured noise floor. The diagnosis matters more than
+the number — page = paper here, so every `multi_hop` question is answerable within one
+page, the regime where a graph helps least because both hops already sit in the same
+neighbourhood. A KG earns its cost when evidence is scattered across documents, which is
+the corpus this dataset cannot supply. A null result about this corpus, not about GraphRAG.
+
 **Per-flag attribution (500 pages).** One flag added at a time from a pure-text baseline.
 
 | config | R@5 | MRR | nDCG | Correct | Decis |
@@ -98,13 +116,22 @@ the pool is deeper. **`+clip` contributes nothing measurable**: identical retrie
 
 **`figure_value` and the visual path.** This category was flat at 0.50 correctness across
 *every* config at 50 pages. At 500 pages with human-verified values it responds: **0.38 →
-0.75 correctness, MRR 0.28 → 0.83.** In a paired comparison where retrieval runs once and
+0.75 correctness, MRR 0.28 → 0.83** — though at n=8 those are [0.12, 0.75] → [0.38, 1.00]
+and overlap heavily, so the mechanism below is the evidence, not the jump. In a paired
+comparison where retrieval runs once and
 the answer is generated twice, the gold crop was retrieved **8/8** — but VQA did not beat
 text (strict 4/8 both; point-estimate 6/8 text vs 5/8 VQA). Exactly two questions differ
 and they cancel: on one, vision recovers a standard deviation that OCR linearisation lost;
 on the other, vision misreads a cell in the *correct* crop and cites it properly.
 
-Total API cost for the full sequence: ~$5.8.
+**Operational, measured on the development machine** (6 cores, 15.7 GB, CPU only; no API
+calls in the measurement). Retrieval-only query latency **p50 3.67 s, p95 13.44 s**, cold
+start 14.6 s, peak RSS **2.47 GB** with three transformer models and two FAISS indices
+resident. OCR ingest 119.7 min for 490 pages (14.7 s/page) and dominates corpus build; KG
+extraction 3.88 M tokens for $0.64. End-to-end latency including the answer model, and
+per-config API cost, are **not measured** — the harness never recorded per-question
+wall-clock or token counts, and obtaining them would cost budget. Total API cost for the
+full sequence: ~$5.8.
 
 ## 4. Findings & Limitations
 

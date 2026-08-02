@@ -1726,3 +1726,119 @@ streamlit run scripts/review_app.py -- --config configs/scale500.yaml
 
 `--step` takes any column of the classic series, so the same interface reviews the baseline
 run or any intermediate config against the identical confidence definition.
+
+---
+
+## 2026-08-02 — Phase 13: uncertainty, operational characteristics, and an honest KG null
+
+No API budget was spent. Everything here is computed from the committed per-question logs
+or measured locally on this machine; the paid model was not called once. Point estimates
+are unchanged and the run that produced them was not repeated.
+
+### Bootstrap confidence intervals
+
+`scripts/bootstrap_ci.py`: 95% percentile bootstrap over questions, 10,000 resamples,
+seed 0, on every per-category and per-predicate row. The script **recomputes the point
+estimates from the logs and asserts them equal to the published `ablation.md` before
+emitting any interval** — if a point estimate had moved, it aborts rather than quietly
+publishing a different number under a new heading. All 6 configs x 7 metrics matched.
+
+Per-step effects use a **paired** bootstrap: the same resampled question indices are scored
+under both configs, because the two arms are the same 127 questions and treating them as
+independent samples would overstate the interval on their difference.
+
+| step | ΔR@5 | ΔCorrect | verdict |
+|---|---|---|---|
+| baseline → +layout | +0.190 [+0.107, +0.274] | +0.065 [+0.000, +0.132] | R@5 real |
+| +layout → +clip | **+0.000 [+0.000, +0.000]** | +0.000 [−0.018, +0.023] | within noise |
+| +clip → +caption | +0.069 [+0.035, +0.107] | +0.000 [−0.030, +0.030] | R@5 real |
+| +caption → +kg | +0.026 [+0.000, +0.059] | +0.030 [+0.004, +0.064] | on the ±0.03 floor |
+| +kg → +rerank | +0.056 [+0.022, +0.097] | +0.004 [−0.037, +0.048] | R@5 real |
+| baseline → +rerank | +0.341 [+0.258, +0.424] | +0.099 [+0.034, +0.168] | both real |
+
+Two results the intervals changed, and both are corrections to how earlier text read:
+
+**The headline survives; the correctness claim needs the paired analysis to stand.**
+Baseline R@5 0.57 [0.49, 0.66] and enhanced 0.91 [0.86, 0.96] do not overlap. But
+correctness 0.59 [0.51, 0.67] → 0.69 [0.61, 0.77] *does* overlap marginally — it is only
+the paired difference, +0.099 [+0.034, +0.168], that excludes zero. Both are now reported,
+because the marginal overlap is the conservative reading and the paired interval the
+powerful one, and they disagree about how confident to be.
+
+**`figure_value`'s jump is not statistically separated.** 0.38 → 0.75 at n=8 is
+[0.12, 0.75] → [0.38, 1.00]. The intervals overlap heavily. The mechanism is independently
+verified — page-crop expansion took gold-crop retrieval from 2/4 to 8/8 — and that, not the
+correctness delta, is the evidence. Eight questions cannot carry more.
+
+Per-predicate, **every interval is wide**; the narrowest spans 0.38. Only `occurs_in`
+separates: its interval tops out at 0.50, below every other predicate's point estimate. The
+rest are ordered but not distinguished, and the earlier per-predicate ranking should not
+have been read as one.
+
+A mechanical threshold was deliberately not left to decide the `+kg` case. Its ΔCorrect is
++0.0302 against a floor of 0.03 — "real" by two ten-thousandths, which is false precision.
+The script now labels an effect whose interval excludes zero but whose magnitude lands on
+the measured floor as *sitting on the floor*, and says so rather than letting a comparison
+of thousandths make the claim.
+
+### The knowledge graph did not demonstrably help on this corpus
+
+Stated up front in `RESULTS.md` and the report, before the per-flag table rather than
+buried under it. The retrieval win is **layout chunking and caption anchoring**, with
+reranking third. It is **not** image embeddings — `+clip`'s ΔR@5 interval is
+[+0.000, +0.000], exactly nothing, not merely small. And the KG's contribution is within
+the noise floor: retrieval +0.026 with an interval touching zero, correctness +0.030 whose
+magnitude *is* the floor.
+
+**The diagnosis is the useful part.** This dataset carries no document identifier, so
+page = paper, which forces every `multi_hop` question to be answerable *within one page* —
+precisely the regime where a graph helps least, because both hops already sit in the same
+retrieval neighbourhood and dense text reaches them without traversing anything. A
+knowledge graph earns its cost when evidence is scattered **across** documents, and that is
+the corpus PubLayNet cannot supply here. So this is a null result about this corpus, not
+about GraphRAG. The pipeline is `paper_id`-agnostic for exactly this reason: a real
+multi-document corpus can be swapped in and the question asked properly.
+
+Recording this plainly is worth more than the alternative. The KG machinery is real —
+closed schema, code-enforced, grounded edges, 1,819 of them — and it is the honest framing
+that it did not pay for itself on a within-page corpus.
+
+### Single-seed, and why
+
+Runs are single-seed by budget: repeating a six-config ablation costs about $5. Rather than
+leave that as an unquantified caveat, the two uncertainties are separated and both
+reported. Sampling uncertainty is the bootstrap above. Run-to-run variance was **measured
+directly** in Phase 11 — an identical configuration re-run over the same 17 multi_hop
+questions moved correctness by 0.029 — so the ±0.03 floor is an observation, not an
+assumption, and every effect is judged against it.
+
+### Operational characteristics
+
+`scripts/measure_ops.py`. Latency and memory timed locally with no model calls; build time
+and token spend read from the logs of the runs that produced the locked results. Anything
+neither locally measurable nor recorded is marked **not measured** rather than estimated.
+
+Machine: Windows, 6 physical / 12 logical cores, 15.7 GB RAM, Python 3.11, CPU only.
+
+Retrieval-only query latency over all 127 gold questions — embed, text search, caption /
+page-crop / image / graph expansion, cross-encoder rerank: **p50 3.67 s, p95 13.44 s**,
+p99 15.30 s, mean 4.79 s, range 0.76–15.89 s. Cold start (three transformer models, two
+FAISS indices, the graph) **14.6 s**, paid once per process. The spread is wide because the
+reranker's pool size depends on how many routes fired — a question triggering caption,
+page-crop and graph expansion pays to rerank all of it.
+
+Memory: 60 MB interpreter baseline → **2,466 MB peak** with everything resident. The three
+models coexist on CPU; on the 4 GB GPU this project targets they would need sequencing.
+
+Corpus build: OCR ingest of 490 pages **119.7 min** (14.7 s/page, 5,619 chunks; per-shard
+1670/1424/1495/1359/1233 s). OCR dominates construction and is single-threaded CPU work —
+the stage that would gain most from parallelism or a GPU backend. KG extraction over 4,776
+chunks: **3,876,391 tokens, $0.6397**.
+
+**Not measured, and left that way:** end-to-end latency including the answer model (the
+harness recorded answers and scores per question but never wall-clock); BGE and BiomedCLIP
+index-build wall-clock (not recorded at the time); per-config API cost (no per-question
+token counts, and the ablation prints cost per invocation). The six-config total is known
+only to about $5, because the first invocation crashed on a rate limit before printing its
+cost line — roughly $0.83 per config, which is a division of a measured total rather than a
+measured quantity.

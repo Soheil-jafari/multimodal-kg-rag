@@ -27,23 +27,23 @@ CHROME = [
 ]
 
 CSS = """
-@page { size: A4; margin: 9mm 8.5mm 7mm 8.5mm; }
+@page { size: A4; margin: 8mm 7.5mm 6mm 7.5mm; }
 * { box-sizing: border-box; }
 html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body { margin:0; font-family:"Charter","Bitstream Charter","Georgia",serif;
-       font-size:7.85pt; line-height:1.295; color:#14181d; }
-.head { border-bottom:1.4pt solid #14181d; padding-bottom:2.2mm; margin-bottom:2.4mm; }
-h1 { font-family:"Segoe UI","Helvetica Neue",sans-serif; font-size:14pt; line-height:1.12;
-     margin:0 0 1.2mm; letter-spacing:-.2pt; }
-.lede { font-size:8.2pt; color:#3d4650; margin:0; max-width:none; }
+       font-size:7.55pt; line-height:1.265; color:#14181d; }
+.head { border-bottom:1.4pt solid #14181d; padding-bottom:1.8mm; margin-bottom:2mm; }
+h1 { font-family:"Segoe UI","Helvetica Neue",sans-serif; font-size:13pt; line-height:1.1;
+     margin:0 0 1mm; letter-spacing:-.2pt; }
+.lede { font-size:7.9pt; color:#3d4650; margin:0; max-width:none; }
 .cols { column-count:2; column-gap:6.5mm; column-fill:auto; }
-h2 { font-family:"Segoe UI","Helvetica Neue",sans-serif; font-size:8.6pt; margin:2.5mm 0 1mm;
+h2 { font-family:"Segoe UI","Helvetica Neue",sans-serif; font-size:8.2pt; margin:2.1mm 0 .85mm;
      padding-bottom:.6mm; border-bottom:.5pt solid #b9c2cc; break-after:avoid;
      letter-spacing:.1pt; }
 h2:first-child { margin-top:0; }
-p { margin:0 0 1.25mm; text-align:justify; hyphens:auto; }
-ul { margin:0 0 1.25mm; padding-left:3.3mm; }
-li { margin:0 0 .65mm; text-align:justify; }
+p { margin:0 0 1.05mm; text-align:justify; hyphens:auto; }
+ul { margin:0 0 1.05mm; padding-left:3.1mm; }
+li { margin:0 0 .55mm; text-align:justify; }
 strong { font-weight:700; }
 code { font-family:"Cascadia Mono","Consolas",monospace; font-size:7.2pt;
        background:#eef1f4; padding:0 .5mm; border-radius:1pt; }
@@ -51,9 +51,9 @@ pre { font-family:"Cascadia Mono","Consolas",monospace; font-size:5.55pt; line-h
       background:#f4f6f8; border:.5pt solid #d5dce3; border-radius:1.5pt;
       padding:1.4mm 1.6mm; margin:0 0 1.8mm; white-space:pre; overflow:hidden;
       break-inside:avoid; }
-table { border-collapse:collapse; width:100%; margin:0 0 1.5mm; font-size:6.65pt;
+table { border-collapse:collapse; width:100%; margin:0 0 1.3mm; font-size:6.35pt;
         break-inside:avoid; font-variant-numeric:tabular-nums; }
-th,td { border:.4pt solid #c3cbd4; padding:.42mm .8mm; text-align:right; }
+th,td { border:.4pt solid #c3cbd4; padding:.34mm .7mm; text-align:right; }
 th:first-child, td:first-child { text-align:left; }
 thead th { background:#e7ecf1; font-weight:700; }
 tbody tr:nth-child(even) td { background:#f6f8fa; }
@@ -61,10 +61,10 @@ em { font-style:italic; color:#3d4650; }
 .cite { display:block; border-left:1.6pt solid #8b96a2; background:#f2f4f7;
         padding:1mm 1.6mm; margin:0 0 1.8mm; font-size:7.4pt; }
 figure { margin:.4mm 0 1.4mm; break-inside:avoid; text-align:center; }
-figure img { width:57mm; max-width:100%; height:auto; }
-figcaption { font-size:6.6pt; color:#3d4650; text-align:justify; margin:1mm 0 0;
+figure img { width:50mm; max-width:100%; height:auto; }
+figcaption { font-size:6.4pt; color:#3d4650; text-align:justify; margin:1mm 0 0;
              font-style:italic; }
-.refs { font-size:6.5pt; line-height:1.25; }
+.refs { font-size:6.3pt; line-height:1.22; }
 """
 
 _INLINE = [
