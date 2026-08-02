@@ -66,3 +66,6 @@ reports/scale500/gold_review.html
 
 # --- model / HF caches ---
 .cache/
+
+# generated artifacts — source of truth is artifacts/EXPERIMENT_LOG.md
+reports/*.docx
