@@ -24,7 +24,7 @@ SKIP_EXT = (".log", ".pyc")
 GROUPS = [
     ("A. DELIVERABLES — the submission proper", [
         "reports/FINAL_REPORT.pdf", "reports/FINAL_REPORT.md",
-        "reports/EXPERIMENT_LOG.docx", "artifacts/EXPERIMENT_LOG.md", "reports/figures",
+        "artifacts/EXPERIMENT_LOG.md", "reports/figures",
     ]),
     ("B. RESULTS — locked, every report number traces here", [
         "reports/scale500", "reports/ablation.md",
@@ -64,6 +64,9 @@ def walk(rel: str):
 def main() -> None:
     grand = 0
     seen: set = set()
+    # A listed path that no longer exists used to yield nothing and vanish from the
+    # manifest, so the submission could quietly shrink. Report it and fail instead.
+    missing: list = []
     for title, paths in GROUPS:
         print("=" * 72)
         print(title)
@@ -71,6 +74,10 @@ def main() -> None:
         sub = 0
         rows = []
         for rel in paths:
+            if not os.path.exists(os.path.join(ROOT, rel)):
+                missing.append(rel)
+                print(f"  MISSING: {rel}")
+                continue
             for f, n in walk(rel):
                 if f in seen:
                     continue
@@ -87,10 +94,20 @@ def main() -> None:
     print("=" * 72)
     print("\nEXCLUDED (regenerable, not needed to read or verify the results):")
     for rel in EXCLUDED:
+        if not os.path.exists(os.path.join(ROOT, rel)):
+            missing.append(rel)
+            print(f"  MISSING: {rel}")
+            continue
         tot = sum(n for _, n in walk(rel))
         print(f"  {size(tot):>9}  {rel}/   (chunk store, FAISS indices, crops, KG)")
     print("\n  artifacts/EXPERIMENT_LOG.md is INCLUDED — only the binary data under")
     print("  artifacts/ is excluded. Rebuild with the commands in reports/scale500/README.md.")
+
+    if missing:
+        print(f"\n{len(missing)} listed path(s) do not resolve:")
+        for rel in missing:
+            print(f"  MISSING: {rel}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
