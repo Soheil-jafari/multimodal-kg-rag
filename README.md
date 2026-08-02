@@ -20,7 +20,19 @@ flag, never from a divergent code path.
 The enhancement gap **widens** with corpus size: on a 50-page corpus the same pipeline
 scored 0.69 → 0.87 (+26%). Baseline retrieval degrades as the corpus grows while the
 enhanced configuration improves, so the small-corpus numbers understated the enhancements
-rather than flattering them.
+rather than flattering them. With 95% bootstrap intervals, R@5 goes 0.57 [0.49, 0.66] →
+0.91 [0.86, 0.96] — non-overlapping.
+
+**And what does *not* work is reported with the same weight.** The retrieval win is layout
+chunking and caption anchoring, with reranking third. It is **not** image embeddings:
+`+clip` contributes ΔR@5 of exactly +0.000 [+0.000, +0.000]. And on this corpus it is
+**not** the knowledge graph — ΔR@5 +0.026 [+0.000, +0.059] and ΔCorrect +0.030 [+0.004,
++0.064], the latter's magnitude being precisely the measured run-to-run noise floor. The
+diagnosis: this dataset carries no document identifier, so page = paper and every
+multi-hop question is answerable within a single page — the regime where a graph helps
+least. A KG earns its cost when evidence is scattered across documents. That is a null
+result about this corpus, not about GraphRAG, and the architecture is `paper_id`-agnostic
+so a real multi-document corpus can be swapped in and the question asked properly.
 
 ---
 
@@ -165,6 +177,23 @@ the vision model to author its own answer key would make any result circular.
 correctness by rubric judge; faithfulness as the grounded-sentence fraction; and decision
 accuracy for the abstain/answer choice. Everything is broken out per category and per
 predicate, with low-sample groups flagged rather than quietly averaged in.
+
+**Uncertainty is reported two ways, because they answer different questions.** Every
+per-category and per-predicate row carries a 95% bootstrap interval over questions (10,000
+resamples, `scripts/bootstrap_ci.py` → `reports/scale500/confidence_intervals.md`), which
+is *sampling* uncertainty. Separately, runs are single-seed — a deliberate consequence of
+the budget, since repeating a six-config ablation costs another ~$5 — so *run-to-run*
+variance was measured directly instead of assumed: re-running an identical configuration
+over the same 17 questions moved correctness by 0.029, and any effect at or below ±0.03 is
+marked "within noise". Point estimates are recomputed from the per-question logs and
+asserted equal to the published tables before any interval is emitted.
+
+**Operational characteristics** are measured on the development machine rather than
+projected (`scripts/measure_ops.py` → `reports/scale500/operational.md`): retrieval-only
+query latency p50 3.67 s / p95 13.44 s on CPU, 14.6 s cold start, 2.47 GB peak resident,
+OCR ingest 14.7 s/page. End-to-end latency including the answer model and per-config API
+cost are marked **not measured**, because the harness never recorded per-question
+wall-clock or token counts and obtaining them would cost API budget.
 
 ## Human-in-the-loop review
 
