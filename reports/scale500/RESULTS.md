@@ -113,9 +113,11 @@ What each step buys:
   work.
 - **`+caption` — the figure win.** figure R@5 0.50→1.00, nDCG 0.61→0.99. Exactly as
   designed, and exactly as at 50 pages.
-- **`+kg` — correctness, not retrieval.** Overall correctness 0.66→0.69, single_fact R@5
-  0.79→0.84. The feared dilution of single_fact by graph noise has now failed to appear
-  twice, on two corpora.
+- **`+kg` — apparent correctness gain sits at the measured noise floor (above).** Overall
+  correctness 0.66→0.69, single_fact R@5 0.79→0.84, but the paired difference is +0.030
+  against a 0.03 floor, so it cannot be separated from re-running the same system. The
+  feared dilution of single_fact by graph noise has now failed to appear twice, on two
+  corpora — which is a real negative result even where the positive one is not.
 - **`+rerank` — the largest retrieval step here.** R@5 0.86→0.91, MRR 0.80→0.88, a bigger
   contribution than at 50 pages. Consistent with the rest: reranking matters more when the
   candidate pool is deeper.

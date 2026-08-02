@@ -107,11 +107,11 @@ the corpus this dataset cannot supply. A null result about this corpus, not abou
 | +rerank | **0.91** | **0.88** | **0.89** | **0.69** | 0.89 |
 
 Layout-aware chunking is the single biggest lever and alone recovers the entire baseline
-degradation. `+caption` is the figure route (figure R@5 0.50→1.00). `+kg` buys correctness
-rather than retrieval, and the feared dilution of `single_fact` by graph noise has now
-failed to appear on two corpora. `+rerank` is the largest retrieval step, a bigger
-contribution than at 50 pages — consistent with the rest, since reranking matters more when
-the pool is deeper. **`+clip` contributes nothing measurable**: identical retrieval to
+degradation. `+caption` is the figure route (figure R@5 0.50→1.00). `+kg`'s apparent
+correctness gain sits at the measured noise floor (above), and the feared dilution of
+`single_fact` by graph noise has now failed to appear on two corpora. `+rerank` is the
+largest retrieval step, a bigger contribution than at 50 pages — consistent with the rest,
+since reranking matters more when the pool is deeper. **`+clip` contributes nothing measurable**: identical retrieval to
 `+layout` on every metric.
 
 **`figure_value` and the visual path.** This category was flat at 0.50 correctness across
@@ -184,8 +184,9 @@ age) —has_value→ (26.0 (8.6))` cannot be represented at all, which is a sche
 just an OCR one.
 
 **Breadth helps multi-hop and dilutes single-fact — twice, independently.** The knowledge
-graph lifts multi-hop correctness while adding context that a single-span question does not
-need. Chain-of-thought reproduces the same shape from the generation side: multi_hop 0.38 →
+graph appears to lift multi-hop correctness, though the effect is at the noise floor, while
+adding context that a single-span question does not need. Chain-of-thought reproduces the
+same shape from the generation side: multi_hop 0.38 →
 0.41 but single_fact (the control) 0.88 → **0.80**, with abstention rising in both subsets
 (0.24→0.29, 0.10→0.15). *Diagnosis:* reasoning surveys the retrieved set and folds in more
 that is topically related; on a question with one correct span, a broader answer is a worse
