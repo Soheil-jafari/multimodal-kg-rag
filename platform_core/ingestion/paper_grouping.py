@@ -2,12 +2,15 @@
 
 Implements :class:`~platform_core.ingestion.base.PaperGrouper`.
 
-The PubLayNet parquet carries no document identifier (``image.path`` is null and
-``id`` is a per-page COCO image_id), so we do NOT invent cross-page papers.
-:class:`PageAsPaperGrouper` treats each page as its own document
-(``paper_id == page_uid``). This is an honest dataset limitation; because the
-rest of the pipeline is ``paper_id``-agnostic, a real multi-page PMC grouper can
-replace this class with no other code change.
+The HuggingFace parquet mirror ingested here carries no document identifier
+(``image.path`` is null and ``id`` is a per-page COCO image_id), so we do NOT
+invent cross-page papers. :class:`PageAsPaperGrouper` treats each page as its
+own document (``paper_id == page_uid``). This is a limitation of the mirror,
+not of PubLayNet: the official distribution encodes the article in the COCO
+``file_name`` field (``PMC<id>_<page>.jpg``), recoverable by joining the COCO
+``image_id`` back to ``val.json``. Because the rest of the pipeline is
+``paper_id``-agnostic, a real multi-page PMC grouper can replace this class
+with no other code change.
 """
 from __future__ import annotations
 
