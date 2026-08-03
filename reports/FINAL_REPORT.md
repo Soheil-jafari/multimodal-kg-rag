@@ -130,9 +130,9 @@ on the other, vision misreads a cell in the *correct* crop and cites it properly
 
 **Operational, measured on the development machine** (6 cores, 15.7 GB, CPU only; no API
 calls in the measurement). Retrieval-only query latency **p50 3.67 s, p95 13.44 s**, cold
-start 14.6 s, peak RSS **2.47 GB** with three transformer models and two FAISS indices
+start 14.6 s, peak RSS **2466 MB** with three transformer models and two FAISS indices
 resident. OCR ingest 119.7 min for 490 pages (14.7 s/page) and dominates corpus build; KG
-extraction 3.88 M tokens for $0.64. End-to-end latency including the answer model, and
+extraction 3876391 tokens for $0.64. End-to-end latency including the answer model, and
 per-config API cost, are **not measured** — the harness never recorded per-question
 wall-clock or token counts, and obtaining them would cost budget. Total API cost for the
 full sequence: ~$5.8.
