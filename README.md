@@ -112,13 +112,34 @@ Two environment notes, both learned the hard way:
 Every entry point takes `--config`; which corpus is processed, which indices are read and
 which models are used all come from the YAML.
 
+**Python 3.11.** `torch==2.5.1` ships no wheels for 3.13.
+
+### Verify the reported numbers (no API key, seconds)
+
+Every per-question log behind every table is committed under
+`reports/scale500/`, so the report can be checked without re-running anything:
+
+```bash
+python -m scripts.check_report_numbers
+```
+
+This walks every figure in `reports/FINAL_REPORT.md` back to the artifact it
+came from, and names any figure it cannot trace to `reports/scale500/`.
+
+### Re-run the pipeline (~2 h OCR, ~$5.8 API, `OPENAI_API_KEY` required)
+
 ```bash
 python -m scripts.ingest              --config configs/scale500.yaml   # OCR -> chunk store
 python -m scripts.build_indices       --config configs/scale500.yaml   # BGE + BiomedCLIP + captions
 python -m scripts.build_kg            --config configs/scale500.yaml   # closed-schema extraction
-python -m scripts.build_gold          --config configs/scale500.yaml --target 130
+python -m scripts.build_gold          --config configs/scale500.yaml --target 130   # optional — see note below
 python -m scripts.ablate              --config configs/scale500.yaml --series classic --resume
 ```
+
+`build_gold` is optional and LLM-driven, so it produces a *different*
+evaluation set on every run. The gold set behind the reported results is
+committed at `domain_packs/biomed/gold/gold_set_scale500.jsonl` — skip this
+step unless you intend to build a new one.
 
 `scripts.evaluate` runs a single config verbatim; `scripts.ablate` runs the series.
 `--resume` reloads any per-question log that is already complete instead of re-paying for
