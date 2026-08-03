@@ -215,7 +215,7 @@ asserted equal to the published tables before any interval is emitted.
 
 **Operational characteristics** are measured on the development machine rather than
 projected (`scripts/measure_ops.py` → `reports/scale500/operational.md`): retrieval-only
-query latency p50 3.67 s / p95 13.44 s on CPU, 14.6 s cold start, 2.47 GB peak resident,
+query latency p50 3.67 s / p95 13.44 s on CPU, 14.6 s cold start, 2466 MB peak resident,
 OCR ingest 14.7 s/page. End-to-end latency including the answer model and per-config API
 cost are marked **not measured**, because the harness never recorded per-question
 wall-clock or token counts and obtaining them would cost API budget.

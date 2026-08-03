@@ -46,7 +46,9 @@ CLAIMS = [
     ("enhanced R@5 CI",     r"0\.91 \[0\.86, 0\.96\]",       ["report", "RESULTS", "README", "log"]),
     ("latency p50",         r"3\.67 s",                      ["report", "RESULTS", "README", "log"]),
     ("latency p95",         r"13\.44 s",                     ["report", "RESULTS", "README", "log"]),
-    ("peak memory",         r"2[,.]4(66|7)",                 ["report", "RESULTS", "README", "log"]),
+    # strict: the canonical form is the recorded unit, `2466 MB`. A pattern that also
+    # accepted `2,466 MB` or `2.47 GB` would let the four documents drift apart again.
+    ("peak memory",         r"2466 MB",                      ["report", "RESULTS", "README", "log"]),
     ("ingest per page",     r"14\.7 s",                      ["report", "RESULTS", "README", "log"]),
 ]
 

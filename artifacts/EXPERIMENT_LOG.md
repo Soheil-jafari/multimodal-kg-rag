@@ -1827,7 +1827,7 @@ FAISS indices, the graph) **14.6 s**, paid once per process. The spread is wide 
 reranker's pool size depends on how many routes fired — a question triggering caption,
 page-crop and graph expansion pays to rerank all of it.
 
-Memory: 60 MB interpreter baseline → **2,466 MB peak** with everything resident. The three
+Memory: 60 MB interpreter baseline → **2466 MB peak** with everything resident. The three
 models coexist on CPU; on the 4 GB GPU this project targets they would need sequencing.
 
 Corpus build: OCR ingest of 490 pages **119.7 min** (14.7 s/page, 5,619 chunks; per-shard

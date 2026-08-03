@@ -94,9 +94,13 @@ def main() -> None:
     print("=" * 72)
     print("\nEXCLUDED (regenerable, not needed to read or verify the results):")
     for rel in EXCLUDED:
+        # Deliberately absent from the repository, so absence is the expected state and
+        # must not fail the run — a fresh clone has none of these until the pipeline is
+        # rebuilt. The existence check applies to the deliverable groups above, where a
+        # missing path really does mean the submission has silently shrunk.
         if not os.path.exists(os.path.join(ROOT, rel)):
-            missing.append(rel)
-            print(f"  MISSING: {rel}")
+            print(f"  {'—':>9}  {rel}/   (not present; rebuild with scripts/, see "
+                  f"reports/scale500/README.md)")
             continue
         tot = sum(n for _, n in walk(rel))
         print(f"  {size(tot):>9}  {rel}/   (chunk store, FAISS indices, crops, KG)")

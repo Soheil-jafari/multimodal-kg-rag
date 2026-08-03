@@ -1,6 +1,6 @@
 # Gold-set spot-check — scale500
 
-`C:/Users/Asus/PycharmProjects/PythonProject6/domain_packs/biomed/gold/gold_set_scale500.jsonl` — 122 questions. Automated filters only; nothing here is human-verified yet.
+`domain_packs/biomed/gold/gold_set_scale500.jsonl` — 122 questions. Automated filters only; nothing here is human-verified yet.
 
 For each item: the question, the answer the builder derived from the graph, and the SOURCE it was derived from. Check that the question is answerable from that source, that the direction is not reversed, and that no qualifier in the question is absent from the source (the q061 defect class).
 
@@ -90,7 +90,7 @@ For each item: the question, the answer the builder derived from the graph, and 
 **q074** — What effects does in vivo lead exposure have on osteoclast precursor frequency and function?
 
 - **expected answer:** `Figure 8. Lack of effects on osteoclast precursors after in vivo Pb exposure. M1, gate used to distinguish between CD11b-positive and -negative cells on the FACScalibur cytometer. Splenocytes from group B (n = 6/group) w`
-- **val00000:414920:r8** [figure] crop=`C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00000_414920_r8.png`
+- **val00000:414920:r8** [figure] crop=`artifacts/scale500/crops/val00000_414920_r8.png`
     - region text: (no OCR text)
 - **val00000:414920:r7** [text]
     - region text: Figure 8. Lack of effects on osteoclast precursors after in vivo Pb exposure. M1, gate used to distinguish between CD11b-positive and -negative cells on the FACScalibur cytometer. Splenocytes from group B (n = 6/group) were used to determine the CD11b* 0CP frequency by flow cytometry analysis (4) or cultured observed n…
@@ -98,7 +98,7 @@ For each item: the question, the answer the builder derived from the graph, and 
 **q077** — How do chlorpyrifos surface loadings compare between high and low homes in main play areas?
 
 - **expected answer:** `Figure 2. Box plots for chlorpyrifos surface loadings (main play areas, LWWA) (ng/cm°) for (4) *high" homes (H1H7) and (B) ~low* homes (HBH10). Note that the y-axis on each plot is not the same.`
-- **val00000:415287:r10** [figure] crop=`C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00000_415287_r10.png`
+- **val00000:415287:r10** [figure] crop=`artifacts/scale500/crops/val00000_415287_r10.png`
     - region text: (no OCR text)
 - **val00000:415287:r6** [text]
     - region text: Figure 2. Box plots for chlorpyrifos surface loadings (main play areas, LWWA) (ng/cm°) for (4) *high" homes (H1H7) and (B) ~low* homes (HBH10). Note that the y-axis on each plot is not the same.
@@ -106,7 +106,7 @@ For each item: the question, the answer the builder derived from the graph, and 
 **q080** — What was the outcome of the vertebroplasty treatment for the painful haemangioma in the 56-year-old man?
 
 - **expected answer:** `FiGukz 1: Painful haemangioma of right-hand aspect of T8 (arrowed) in a 56-year-old man treated with unipedicular vertebroplasty. Sagittal (a) and axial (b) TSE T2-weighted images. (c): Vertebroplasty spot fluoroscopy im`
-- **val00001:358817:r4** [figure] crop=`C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00001_358817_r4.png`
+- **val00001:358817:r4** [figure] crop=`artifacts/scale500/crops/val00001_358817_r4.png`
     - region text: (no OCR text)
 - **val00001:358817:r3** [text]
     - region text: FiGukz 1: Painful haemangioma of right-hand aspect of T8 (arrowed) in a 56-year-old man treated with unipedicular vertebroplasty. Sagittal (a) and axial (b) TSE T2-weighted images. (c): Vertebroplasty spot fluoroscopy image, AP projection. Postprocedure, the patient reported complete resolution of pain.
@@ -114,7 +114,7 @@ For each item: the question, the answer the builder derived from the graph, and 
 **q083** — What does the WHO scale indicate about the likelihood of moderate body weight change?
 
 - **expected answer:** `Figure 1 WHO scale predicting moderate (5-10%) body weight change`
-- **val00001:413967:r7** [figure] crop=`C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00001_413967_r7.png`
+- **val00001:413967:r7** [figure] crop=`artifacts/scale500/crops/val00001_413967_r7.png`
     - region text: (no OCR text)
 - **val00001:413967:r3** [text]
     - region text: Figure 1 WHO scale predicting moderate (5-10%) body weight change
@@ -126,8 +126,8 @@ For each item: the question, the answer the builder derived from the graph, and 
 - **expected answer:** `CYP1A protein expression`
 - **from predicate(s):** inhibits
 - ⚠ **value NOT verified** — derived from table OCR, which phase 9 showed misplaces digits. Verify against the crop before use.
-- **crop:** `C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00000_415406_r6.png`
-- **val00000:415406:r6** [table] crop=`C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00000_415406_r6.png`
+- **crop:** `artifacts/scale500/crops/val00000_415406_r6.png`
+- **val00000:415406:r6** [table] crop=`artifacts/scale500/crops/val00000_415406_r6.png`
     - evidence: *modestly lowers CYP1A protein expression in vivo*
     - region text: Compound Type Structure Mechanism of action Sample refererces sgsiuofe HHV BNF Synthetically derived Matsuda et al. 1995; Ronisz and model PAH Forlin 1998 BaP relevant PAH Environmentally Chaloupka et al. 1993; Fent and Batscher 2000; Van Veld et al. 1997 PCB-126 Environmentaly Abnet et al. 1999; Dabrowska et al. relev…
 
@@ -136,8 +136,8 @@ For each item: the question, the answer the builder derived from the graph, and 
 - **expected answer:** `ICAM-1`
 - **from predicate(s):** increases
 - ⚠ **value NOT verified** — derived from table OCR, which phase 9 showed misplaces digits. Verify against the crop before use.
-- **crop:** `C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00003_420785_r1.png`
-- **val00003:420785:r1** [table] crop=`C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00003_420785_r1.png`
+- **crop:** `artifacts/scale500/crops/val00003_420785_r1.png`
+- **val00003:420785:r1** [table] crop=`artifacts/scale500/crops/val00003_420785_r1.png`
     - evidence: *- increased ICAM-1 and E-selectin*
     - region text: Endothelial cell type Plosmodium strain Evaluated parameters Endothelial phenotype Ref. Porcine brain capillary endothelial cels (PSCEC) P. falc(parum - ICAM-1, E-selectin expression; - increased ICAM-1 and E-selectin [99] - TEER - decreased BBB function; - tight junction expression - tight junction disruption Human um…
 
@@ -146,8 +146,8 @@ For each item: the question, the answer the builder derived from the graph, and 
 - **expected answer:** `P. berghei (K173)`
 - **from predicate(s):** occurs_in
 - ⚠ **value NOT verified** — derived from table OCR, which phase 9 showed misplaces digits. Verify against the crop before use.
-- **crop:** `C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00003_420786_r5.png`
-- **val00003:420786:r5** [table] crop=`C:/Users/Asus/PycharmProjects/PythonProject6/artifacts/scale500/crops\val00003_420786_r5.png`
+- **crop:** `artifacts/scale500/crops/val00003_420786_r5.png`
+- **val00003:420786:r5** [table] crop=`artifacts/scale500/crops/val00003_420786_r5.png`
     - evidence: *Mouse P. berghei (K173) Histochemical and histological evaluation of cerebral lesions and their distribution*
     - region text: Animal source Plasmodium Method to evaluate B8B integrity strain Degree of impairment Reference Rhesus monkey P. knowfes/ Examination of moverment of proteins across the BBB by radiometric and Increase of BBB permeability [109-111] (Mgcgcz mulotta) fluorimetric methods Rhesus monkey P. frogile Electron microscopy, immu…
 

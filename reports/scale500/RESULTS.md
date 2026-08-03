@@ -420,7 +420,7 @@ reranking all of it. This is CPU inference — the same work on a GPU is a diffe
 Cold start loads three transformer models plus two FAISS indices and the graph, and is paid
 once per process.
 
-**Memory:** 60 MB interpreter baseline → **2,466 MB peak** with everything resident. The
+**Memory:** 60 MB interpreter baseline → **2466 MB peak** with everything resident. The
 three models coexist on CPU; on the 4 GB GPU this project targets they would need
 sequencing.
 
