@@ -1842,3 +1842,41 @@ token counts, and the ablation prints cost per invocation). The six-config total
 only to about $5, because the first invocation crashed on a rate limit before printing its
 cost line — roughly $0.83 per config, which is a division of a measured total rather than a
 measured quantity.
+
+---
+
+## 2026-08-02 — Erratum: page = paper is a property of the MIRROR, not of PubLayNet
+
+Correcting a provenance claim made in Phase 0 (2026-07-27, "Critical finding — no document
+identifier") and repeated in Phase 13 ("This dataset carries no document identifier").
+Appended rather than edited in place, because this log is the dated record of what was
+believed at the time and rewriting it would hide the error rather than fix it.
+
+**What was claimed:** that PubLayNet carries no document identifier, and that page = paper
+is therefore a limitation of the source data.
+
+**What is actually true:** the limitation belongs to the HuggingFace parquet mirror this
+project ingests from (`jordanparker6/publaynet`), which drops the original filename —
+`image.path` is null on every row and `id` is only a per-page COCO image_id. The **official**
+PubLayNet distribution does encode the article: the COCO `file_name` field is
+`PMC<article-id>_<page>.jpg`. Grouping is therefore **recoverable** by joining the COCO
+`image_id` kept in the `id` field back to `val.json` → `file_name` → PMC prefix. The
+observation in Phase 0 was correct about the parquet in hand; the generalisation to
+PubLayNet was not.
+
+**What this changes, and what it does not.** No number, no measurement and no decision
+changes: the corpus really was ingested without article IDs, `multi_hop` questions really
+are within-page, and every result stands as measured. What changes is the *scope* of the
+Phase-13 knowledge-graph null result. It was already stated as a result about this corpus
+rather than about GraphRAG; that scoping is now correctly attributed — the KG was tested in
+the within-page regime because of a mirror artefact, not because the dataset makes the
+multi-document regime impossible. The multi-document test is available to anyone who
+rebuilds from the official distribution.
+
+`PageAsPaperGrouper` remains the swap point. `paper_id` and `page_id` were stored
+separately from Phase 0 precisely so a real grouper could replace it with no schema change,
+and that decision is unaffected — if anything it is now better motivated, since the join
+that would populate it is a concrete, documented path rather than a hypothetical.
+
+Corrected in `README.md`, `reports/FINAL_REPORT.md`, `reports/scale500/RESULTS.md` and the
+`PaperGrouper` docstring.

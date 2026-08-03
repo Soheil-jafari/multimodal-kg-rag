@@ -83,8 +83,9 @@ correctness effect is +0.030 [+0.004, +0.064]: the sampling interval excludes ze
 magnitude *is* the measured run-to-run floor, so it cannot be separated from re-running the
 same system. The honest claim is that the KG did not demonstrably help on this corpus.
 
-**And the diagnosis matters more than the number.** This corpus has no document
-identifier, so page = paper, which forces every `multi_hop` question to be answerable
+**And the diagnosis matters more than the number.** The HuggingFace parquet mirror this
+corpus was ingested from drops the original filename, so PMC article IDs are unavailable in
+this copy and page = paper — which forces every `multi_hop` question to be answerable
 *within a single page*. That is precisely the regime where a graph helps least: the two
 hops are already in the same retrieval unit's neighbourhood, and dense text retrieval
 reaches them without traversing anything. A knowledge graph earns its cost when evidence is
@@ -352,9 +353,12 @@ check against the whole corpus, not a presence check against the cited region.
   up from 71% before — see EXPERIMENT_LOG Phase 10 part A.
 - **gpt-4o is not deterministic at temperature 0.** Single-question before/afters are
   evidence about a mechanism, never reproducible fixtures.
-- **page == paper.** The PubLayNet parquet carries no document id, so multi-hop questions
-  are within-page. Both `page_id` and `paper_id` are stored so real grouping can be swapped
-  in with no schema change.
+- **page == paper — a property of the mirror, not of PubLayNet.** The HuggingFace parquet
+  mirror drops the original filename, so PMC article IDs are unavailable in this copy and
+  multi-hop questions are within-page. The official distribution encodes the article in the
+  COCO `file_name` field (`PMC<id>_<page>.jpg`), recoverable by joining the COCO `image_id`
+  back to `val.json`. Both `page_id` and `paper_id` are stored, and `PaperGrouper` is the
+  swap point, so a real grouper drops in with no schema change.
 
 ---
 

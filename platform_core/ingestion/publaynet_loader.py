@@ -6,8 +6,10 @@ and ``annotations`` (COCO list with ``bbox`` = [x, y, w, h] px and an integer
 ``category_id``). We read directly with pyarrow (no ``datasets`` dependency),
 convert bboxes to corner form, and yield in-memory pages.
 
-The shard has no document identifier, so ``page_uid = "<shard_tag>:<id>"`` and
-page grouping is handled separately (see paper_grouping).
+This mirror drops the original filename, so no article id is available here and
+``page_uid = "<shard_tag>:<id>"``. The official distribution keeps it in the COCO
+``file_name`` field (``PMC<article-id>_<page>.jpg``); page grouping is handled
+separately so that join can be added behind one interface (see paper_grouping).
 """
 from __future__ import annotations
 
