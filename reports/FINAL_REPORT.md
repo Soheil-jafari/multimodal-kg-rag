@@ -7,9 +7,13 @@ questions, and reports where it does not.
 ## 1. Problem & Approach
 
 PubLayNet supplies region boxes and labels for scientific paper pages but no text, so every
-region is OCR'd from its crop. The corpus has no document identifier, so page = paper and
-multi-hop questions are within-page; both `page_id` and `paper_id` are stored so real
-grouping can be added without a schema change.
+region is OCR'd from its crop. The HuggingFace parquet mirror used here drops the original
+filename, so PMC article IDs are unavailable in this copy and page = paper. The official
+PubLayNet distribution encodes the article in the COCO `file_name` field
+(`PMC<id>_<page>.jpg`), recoverable by joining the COCO `image_id` back to `val.json`.
+`page_id` and `paper_id` are stored separately so a real multi-page grouper swaps in behind
+`PaperGrouper` with no schema change — the KG null result below is therefore about this
+corpus copy, not about GraphRAG.
 
 The design constraint is the fairness guarantee: **baseline and enhanced are one code path
 separated only by flags.** Dense BGE text retrieval always runs and that block alone *is*
@@ -92,8 +96,8 @@ knowledge graph: ΔR@5 +0.026 [+0.000, +0.059] touches zero, and ΔCorrect +0.03
 +0.064] has a magnitude that *is* the measured noise floor. The diagnosis matters more than
 the number — page = paper here, so every `multi_hop` question is answerable within one
 page, the regime where a graph helps least because both hops already sit in the same
-neighbourhood. A KG earns its cost when evidence is scattered across documents, which is
-the corpus this dataset cannot supply. A null result about this corpus, not about GraphRAG.
+neighbourhood. A KG earns its cost when evidence is scattered across documents, which this
+corpus copy cannot supply. A null result about this corpus, not about GraphRAG.
 
 **Per-flag attribution (500 pages).** One flag added at a time from a pure-text baseline.
 

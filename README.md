@@ -28,9 +28,9 @@ chunking and caption anchoring, with reranking third. It is **not** image embedd
 `+clip` contributes ΔR@5 of exactly +0.000 [+0.000, +0.000]. And on this corpus it is
 **not** the knowledge graph — ΔR@5 +0.026 [+0.000, +0.059] and ΔCorrect +0.030 [+0.004,
 +0.064], the latter's magnitude being precisely the measured run-to-run noise floor. The
-diagnosis: this dataset carries no document identifier, so page = paper and every
-multi-hop question is answerable within a single page — the regime where a graph helps
-least. A KG earns its cost when evidence is scattered across documents. That is a null
+diagnosis: the HuggingFace mirror this corpus came from drops the original filename, so
+PMC article IDs are unavailable in this copy, page = paper, and every multi-hop question is
+answerable within a single page — the regime where a graph helps least. A KG earns its cost when evidence is scattered across documents. That is a null
 result about this corpus, not about GraphRAG, and the architecture is `paper_id`-agnostic
 so a real multi-document corpus can be swapped in and the question asked properly.
 
@@ -73,12 +73,16 @@ PubLayNet, read directly from its parquet shards with `pyarrow`. It provides **b
 boxes and region labels** (text / title / list / table / figure) but **no text**, so
 ingestion OCRs every labelled region crop.
 
-**Page = paper.** The parquet carries no document identifier — `image.path` is null on
-every row and `id` is a per-page COCO image id — so multi-page papers cannot be
-reconstructed and are not faked. `paper_id` and `page_id` are stored separately (equal
-today) so a real grouper can be swapped in with no schema change, and `multi_hop`
-questions are within-page by construction. This is a limitation of the source data, and it
-is recorded as one.
+**Page = paper.** The HuggingFace parquet mirror ingested here
+(`jordanparker6/publaynet`) drops the original filename — `image.path` is
+null on every row and `id` is a per-page COCO image id — so PMC article IDs
+are unavailable in this copy and multi-page papers are not reconstructed.
+This is a limitation of the mirror, not of PubLayNet: the official
+distribution carries the article in the COCO `file_name` field
+(`PMC<id>_<page>.jpg`), recoverable by joining the COCO `image_id` back to
+`val.json`. `paper_id` and `page_id` are stored separately (equal today) so a
+real multi-page grouper swaps in behind `PaperGrouper` with no schema change.
+`multi_hop` questions are within-page by construction as a result.
 
 OCR is **RapidOCR** (`rapidocr-onnxruntime`) behind the `RegionOCR` interface — pure pip,
 CPU, no system binary required.
