@@ -69,3 +69,6 @@ reports/scale500/gold_review.html
 
 # generated artifacts — source of truth is artifacts/EXPERIMENT_LOG.md
 reports/*.docx
+
+# submission archives are built on demand with git archive
+*.zip
