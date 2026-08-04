@@ -10,6 +10,13 @@ not needed and would add a dependency.
 PDF comes from headless Chrome, which is already on the machine and gives real CSS page
 control. The brief caps the report at two pages, so the page count is asserted rather than
 hoped for.
+
+Two PDFs are written: the canonical ``reports/FINAL_REPORT.pdf`` that the manifest, the
+README and the number checks all reference, and a byte-identical copy under the name the
+submission is filed as. Both are produced here because a copy refreshed by hand goes stale
+without any symptom — the two files still open, and nothing reports that they diverged. The
+copy is written only after the page-count check passes, so an over-length render cannot
+replace a good submission file with a bad one.
 """
 from __future__ import annotations
 
@@ -17,6 +24,7 @@ import argparse
 import html
 import os
 import re
+import shutil
 import subprocess
 import sys
 
@@ -180,6 +188,9 @@ def main() -> None:
     ap.add_argument("--md", default=ROOT + "/reports/FINAL_REPORT.md")
     ap.add_argument("--pdf", default=ROOT + "/reports/FINAL_REPORT.pdf")
     ap.add_argument("--max-pages", type=int, default=2)
+    ap.add_argument("--copy-to", default=ROOT + "/Soheil_Jafarifard_Bidgoli_R260036_Report.pdf",
+                    help="second path the finished PDF is copied to — the name the "
+                         "submission is filed under. Pass an empty string to skip.")
     args = ap.parse_args()
 
     md = open(args.md, encoding="utf-8").read()
@@ -204,8 +215,22 @@ def main() -> None:
     size = os.path.getsize(args.pdf) / 1024
     print(f"{args.pdf}  {pages} page(s), {size:.0f} KB")
     if pages > args.max_pages:
+        # Deliberately before the copy: an over-length render must not be propagated to
+        # the submission filename, or the stale-but-valid copy is replaced by a bad one.
         print(f"OVER the {args.max_pages}-page limit — tighten before submitting")
+        print(f"{args.copy_to} NOT updated")
         sys.exit(1)
+
+    # The canonical path is what the manifest, the README and the checks reference; the
+    # copy carries the name the submission is filed under. Kept in step here because a
+    # copy that only updates by hand goes stale silently — the two would still open, and
+    # nothing would report that they had diverged.
+    if args.copy_to:
+        shutil.copyfile(args.pdf, args.copy_to)
+        same = open(args.pdf, "rb").read() == open(args.copy_to, "rb").read()
+        print(f"{args.copy_to}  copy {'verified identical' if same else 'MISMATCH'}")
+        if not same:
+            sys.exit(1)
 
 
 if __name__ == "__main__":
