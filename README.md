@@ -234,6 +234,10 @@ python -m scripts.build_review_queue --config configs/scale500.yaml --step +rera
 streamlit run scripts/review_app.py -- --config configs/scale500.yaml
 ```
 
+It runs locally and serves at **<http://localhost:8501>**; the queue it reads is committed
+at `reports/scale500/review_queue.jsonl`, so the dashboard opens on the same results the
+report was written from.
+
 The queue is precomputed because scoring it needs a retrieval pass per question; the app
 itself only reads. `--step` takes any column of the ablation series, so the same interface
 reviews the baseline or any intermediate config under one definition of confidence.
